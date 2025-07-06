@@ -1,24 +1,35 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
+import { Box, Button, Container, Paper, TextField, Typography } from '@mui/material';
 
-// Video upload page for authenticated users
 function Upload() {
   const [form, setForm] = useState({ title: '', description: '', file: null });
+  const [preview, setPreview] = useState(null);
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
-  // Handle text input changes
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
-  // Handle file input
   function handleFile(e) {
-    setForm({ ...form, file: e.target.files[0] });
+    const file = e.target.files[0];
+    setForm({ ...form, file });
+    if (file) {
+      const ext = file.name.split('.').pop().toLowerCase();
+      if (["jpg", "jpeg", "png", "webp"].includes(ext)) {
+        setPreview(URL.createObjectURL(file));
+      } else if (ext === 'mp4') {
+        setPreview(URL.createObjectURL(file));
+      } else {
+        setPreview(null);
+      }
+    } else {
+      setPreview(null);
+    }
   }
 
-  // Handle form submission
   async function handleSubmit(e) {
     e.preventDefault();
     if (!token) return;
@@ -37,48 +48,68 @@ function Upload() {
   }
 
   if (!token) {
-    return <p style={{ textAlign: 'center', marginTop: '2rem' }}>Please login first</p>;
+    return <Typography align="center" sx={{ mt: 6 }}>Please login first</Typography>;
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: 500, margin: '2rem auto' }}>
-      <fieldset>
-        <legend>Upload Video</legend>
-        <label style={{ display: 'block', marginBottom: '1rem' }}>
-          Title
-          <input
-            type="text"
+    <Container maxWidth="sm">
+      <Paper elevation={3} sx={{ p: 4, mt: 6 }}>
+        <Typography variant="h5" align="center" gutterBottom>Upload Media</Typography>
+        <Box component="form" onSubmit={handleSubmit}>
+          <TextField
+            label="Title"
             name="title"
+            type="text"
             value={form.title}
             onChange={handleChange}
             required
-            style={{ width: '100%', padding: '0.5rem' }}
+            fullWidth
+            margin="normal"
           />
-        </label>
-        <label style={{ display: 'block', marginBottom: '1rem' }}>
-          Description
-          <textarea
+          <TextField
+            label="Description"
             name="description"
             value={form.description}
             onChange={handleChange}
             rows={3}
-            style={{ width: '100%', padding: '0.5rem' }}
+            multiline
+            fullWidth
+            margin="normal"
           />
-        </label>
-        <label style={{ display: 'block', marginBottom: '1rem' }}>
-          Video File
-          <input
-            type="file"
-            name="file"
-            accept="video/mp4"
-            onChange={handleFile}
-            required
-            style={{ width: '100%' }}
-          />
-        </label>
-        <button type="submit" style={{ padding: '0.5rem 1rem' }}>Upload</button>
-      </fieldset>
-    </form>
+          <Button
+            variant="contained"
+            component="label"
+            fullWidth
+            sx={{ mt: 2 }}
+          >
+            Select Video or Image File
+            <input
+              type="file"
+              name="file"
+              accept="video/mp4,image/jpeg,image/png,image/webp"
+              onChange={handleFile}
+              required
+              hidden
+            />
+          </Button>
+          <Typography variant="body2" sx={{ mt: 1, mb: 2 }} color={form.file ? 'text.primary' : 'text.secondary'}>
+            {form.file ? form.file.name : 'No file selected'}
+          </Typography>
+          {preview && (
+            <Box sx={{ mb: 2, textAlign: 'center' }}>
+              {form.file && ["jpg", "jpeg", "png", "webp"].includes(form.file.name.split('.').pop().toLowerCase()) ? (
+                <img src={preview} alt="preview" style={{ maxWidth: '100%', maxHeight: 300, borderRadius: 8 }} />
+              ) : (
+                <video src={preview} controls style={{ maxWidth: '100%', maxHeight: 300, borderRadius: 8 }} />
+              )}
+            </Box>
+          )}
+          <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+            Upload
+          </Button>
+        </Box>
+      </Paper>
+    </Container>
   );
 }
 

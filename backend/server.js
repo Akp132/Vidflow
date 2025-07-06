@@ -7,6 +7,7 @@ import rateLimit from 'express-rate-limit';
 import errorHandler from './middleware/errorHandler.js';
 import authRoutes from './routes/auth.js';
 import videoRoutes from './routes/videos.js';
+import profileRoutes from './routes/profile.js';
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/videos', videoRoutes);
+app.use('/api/profile', profileRoutes);
 
 app.get('/', (req, res) => {
   res.json({ ok: true });

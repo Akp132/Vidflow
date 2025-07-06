@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api, { setToken } from '../api';
+import { Box, Button, Container, Paper, TextField, Typography } from '@mui/material';
 
 // Login page for returning users
 function Login() {
@@ -31,37 +32,37 @@ function Login() {
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: 400, margin: '2rem auto' }}>
-      <h2>Login</h2>
-      <div style={{ marginBottom: '1rem' }}>
-        <label>
-          Email
-          <input
-            type="email"
+    <Container maxWidth="xs">
+      <Paper elevation={3} sx={{ p: 4, mt: 6 }}>
+        <Typography variant="h5" align="center" gutterBottom>Login</Typography>
+        <Box component="form" onSubmit={handleSubmit}>
+          <TextField
+            label="Email"
             name="email"
+            type="email"
             value={form.email}
             onChange={handleChange}
             required
-            style={{ width: '100%', padding: '0.5rem' }}
+            fullWidth
+            margin="normal"
           />
-        </label>
-      </div>
-      <div style={{ marginBottom: '1rem' }}>
-        <label>
-          Password
-          <input
-            type="password"
+          <TextField
+            label="Password"
             name="password"
+            type="password"
             value={form.password}
             onChange={handleChange}
             required
-            minLength={6}
-            style={{ width: '100%', padding: '0.5rem' }}
+            fullWidth
+            margin="normal"
+            inputProps={{ minLength: 6 }}
           />
-        </label>
-      </div>
-      <button type="submit" style={{ padding: '0.5rem 1rem' }}>Login</button>
-    </form>
+          <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+            Login
+          </Button>
+        </Box>
+      </Paper>
+    </Container>
   );
 }
 

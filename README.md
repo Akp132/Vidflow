@@ -25,15 +25,23 @@ Vidflow/
 │   ├── routes/        # API routes (auth, videos)
 │   ├── server.js      # Entry point
 │   └── .env           # Backend environment variables
-└── frontend/          # React + Vite client
-    ├── public/        # Static assets
-    ├── src/           # React source code
-    │   ├── pages/     # Feed, Login, Signup, Upload
-    │   ├── api.js     # Axios instance
-    │   └── App.jsx    # Main layout
-    ├── index.html     # HTML entry
-    ├── .env           # Frontend environment variables
-    └── vite.config.js # Vite config
+├── frontend/          # React + Vite client (legacy)
+│   ├── public/        # Static assets
+│   ├── src/           # React source code
+│   │   ├── pages/     # Feed, Login, Signup, Upload
+│   │   ├── api.js     # Axios instance
+│   │   └── App.jsx    # Main layout
+│   ├── index.html     # HTML entry
+│   ├── .env           # Frontend environment variables
+│   └── vite.config.js # Vite config
+└── frontend-next/     # Next.js client (recommended)
+    ├── src/
+    │   ├── app/       # Next.js App Router pages
+    │   ├── components/# Reusable components
+    │   ├── contexts/  # React contexts
+    │   └── lib/       # Utilities
+    ├── .env.local     # Next.js environment variables
+    └── README.md      # Next.js frontend documentation
 ```
 
 ---
@@ -81,16 +89,33 @@ cd Vidflow
 
 ### 3. Frontend Setup
 
-1. Install dependencies:
+**Option 1: Next.js Frontend (Recommended)**
+1. Navigate to the Next.js frontend:
    ```sh
-   cd ../frontend
+   cd frontend-next
    npm install
    ```
-2. Create a `.env` file in `frontend/`:
+2. Create a `.env.local` file:
+   ```env
+   NEXT_PUBLIC_API_URL=http://localhost:5050/api
+   ```
+3. Start the Next.js dev server:
+   ```sh
+   npm run dev
+   ```
+   The app runs on `http://localhost:3000` by default.
+
+**Option 2: Legacy Vite Frontend**
+1. Navigate to the legacy frontend:
+   ```sh
+   cd frontend
+   npm install
+   ```
+2. Create a `.env` file:
    ```env
    VITE_API=http://localhost:5050/api
    ```
-3. Start the frontend dev server:
+3. Start the Vite dev server:
    ```sh
    npm run dev
    ```
@@ -140,7 +165,9 @@ VITE_API=http://localhost:5050/api
 ---
 
 ## Tech Stack
-- **Frontend**: React 19, Vite, Axios, React Router
+- **Frontend**: 
+  - **Next.js 15** (recommended) with TypeScript, Tailwind CSS, and Headless UI
+  - **React 19 + Vite** (legacy) with MUI for quick prototyping
 - **Backend**: Express 5, Mongoose, Cloudinary, Multer, JWT
 - **Database**: MongoDB Atlas
 - **Media Storage**: Cloudinary

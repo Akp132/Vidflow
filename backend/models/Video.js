@@ -18,6 +18,12 @@ const videoSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    mediaType: {
+      type: String,
+      enum: ['video', 'image'],
+      required: true,
+      default: 'video',
+    },
   },
   { timestamps: true }
 );
